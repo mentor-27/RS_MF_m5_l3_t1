@@ -1,23 +1,27 @@
-import React, {useState} from 'react';
+import { useEffect } from 'react';
+import { ThemeProvider } from 'react-bootstrap';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './MainApp.scss';
-import {ThemeProvider} from 'react-bootstrap';
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import {Layout} from 'src/components/Layout';
-import {ContactListPage, GroupPage, ContactPage, FavoritListPage, GroupListPage} from 'src/pages';
-import {ContactDto} from 'src/types/dto/ContactDto';
-import {FavoriteContactsDto} from 'src/types/dto/FavoriteContactsDto';
-import {GroupContactsDto} from 'src/types/dto/GroupContactsDto';
-import {DATA_CONTACT, DATA_GROUP_CONTACT} from 'src/__data__';
+
+import { Layout } from '../../components/Layout';
+import {
+  ContactListPage,
+  GroupPage,
+  ContactPage,
+  FavoritListPage,
+  GroupListPage,
+} from '../../pages';
+import { DATA_CONTACT, DATA_GROUP_CONTACT } from '../../__data__';
+import { useAppDispatch } from '../../redux/hooks';
+import { SET_CONTACTS_ACTION, SET_GROUPS_ACTION } from '../../redux/actions';
 
 export const MainApp = () => {
-  const contactsState = useState<ContactDto[]>(DATA_CONTACT);
-  const favoriteContactsState = useState<FavoriteContactsDto>([
-    DATA_CONTACT[0].id,
-    DATA_CONTACT[1].id,
-    DATA_CONTACT[2].id,
-    DATA_CONTACT[3].id
-  ]);
-  const groupContactsState = useState<GroupContactsDto[]>(DATA_GROUP_CONTACT);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch({ type: SET_CONTACTS_ACTION, payload: DATA_CONTACT });
+    dispatch({ type: SET_GROUPS_ACTION, payload: DATA_GROUP_CONTACT });
+  }, []);
 
   return (
     <ThemeProvider
@@ -27,52 +31,16 @@ export const MainApp = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={
-              <ContactListPage
-                contactsState={contactsState}
-                favoriteContactsState={favoriteContactsState}
-                groupContactsState={groupContactsState}
-              />
-            } />
+            <Route index element={<ContactListPage />} />
             <Route path="contact">
-              <Route index element={
-                <ContactListPage
-                  contactsState={contactsState}
-                  favoriteContactsState={favoriteContactsState}
-                  groupContactsState={groupContactsState}
-                />
-              } />
-              <Route path=":contactId" element={
-                <ContactPage
-                  contactsState={contactsState}
-                  favoriteContactsState={favoriteContactsState}
-                  groupContactsState={groupContactsState}
-                />
-              } />
+              <Route index element={<ContactListPage />} />
+              <Route path=":contactId" element={<ContactPage />} />
             </Route>
             <Route path="groups">
-              <Route index element={
-                <GroupListPage
-                  contactsState={contactsState}
-                  favoriteContactsState={favoriteContactsState}
-                  groupContactsState={groupContactsState}
-                />
-              } />
-              <Route path=":groupId" element={
-                <GroupPage
-                  contactsState={contactsState}
-                  favoriteContactsState={favoriteContactsState}
-                  groupContactsState={groupContactsState}
-                />
-              } />
+              <Route index element={<GroupListPage />} />
+              <Route path=":groupId" element={<GroupPage />} />
             </Route>
-            <Route path="favorit" element={
-              <FavoritListPage
-                contactsState={contactsState}
-                favoriteContactsState={favoriteContactsState}
-                groupContactsState={groupContactsState}
-              />
-            } />
+            <Route path="favorite" element={<FavoritListPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
