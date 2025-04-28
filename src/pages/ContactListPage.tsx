@@ -4,15 +4,19 @@ import { Col, Row } from 'react-bootstrap';
 import { ContactCard } from '../components/ContactCard';
 import { FilterForm, FilterFormValues } from '../components/FilterForm';
 import { ContactDto } from '../types/dto/ContactDto';
-import { GroupContactsDto } from '../types/dto/GroupContactsDto';
-import { useAppSelector } from '../redux/hooks';
+import { useGetContactsQuery } from '../ducks/contacts';
+import { useGetGroupsQuery } from '../ducks/groups';
 
 export const ContactListPage = memo(() => {
-  const contacts = useAppSelector<ContactDto[]>(state => state.contacts);
-  const groups = useAppSelector<GroupContactsDto[]>(state => state.groups);
+  const { data: contacts } = useGetContactsQuery();
+  const { data: groups } = useGetGroupsQuery();
   const [filterValues, setFilteredContacts] = useState<Partial<FilterFormValues>>({});
 
   const filteredContacts = useMemo(() => {
+    if (!contacts || !groups) {
+      return [];
+    }
+
     let result: ContactDto[] = contacts;
 
     if (filterValues.name) {

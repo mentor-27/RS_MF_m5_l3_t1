@@ -2,19 +2,18 @@ import { useMemo } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
-import { ContactDto } from '../types/dto/ContactDto';
 import { ContactCard } from '../components/ContactCard';
 import { Empty } from '../components/Empty';
-import { useAppSelector } from '../redux/hooks';
+import { useGetContactsQuery } from '../ducks/contacts';
 
 export const ContactPage = () => {
   const { contactId } = useParams<{ contactId: string }>();
-  const contacts = useAppSelector<ContactDto[]>(state => state.contacts);
+  const { data: contacts } = useGetContactsQuery();
 
-  const contact = useMemo<ContactDto>(
-    () => contacts.find(({ id }) => id === contactId) as ContactDto,
-    [contactId]
-  );
+  const contact = useMemo(() => {
+    if (!contacts) return;
+    return contacts.find(({ id }) => id === contactId);
+  }, [contactId]);
 
   return (
     <Row xxl={3}>

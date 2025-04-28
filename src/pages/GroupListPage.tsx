@@ -2,19 +2,19 @@ import { memo } from 'react';
 import { Col, Row } from 'react-bootstrap';
 
 import { GroupContactsCard } from '../components/GroupContactsCard';
-import { useAppSelector } from '../redux/hooks';
-import { GroupContactsDto } from '../types/dto/GroupContactsDto';
+import { useGetGroupsQuery } from '../ducks/groups';
 
 export const GroupListPage = memo(() => {
-  const groups = useAppSelector<GroupContactsDto[]>(state => state.groups);
+  const { data: groups } = useGetGroupsQuery();
 
   return (
     <Row xxl={4}>
-      {groups.map(group => (
-        <Col key={group.id}>
-          <GroupContactsCard group={group} withLink />
-        </Col>
-      ))}
+      {groups &&
+        groups.map(group => (
+          <Col key={group.id}>
+            <GroupContactsCard group={group} withLink />
+          </Col>
+        ))}
     </Row>
   );
 });
