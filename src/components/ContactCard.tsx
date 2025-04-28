@@ -1,33 +1,47 @@
-import React, {memo} from 'react';
-import {ContactDto} from 'src/types/dto/ContactDto';
-import {Card, ListGroup} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
+import { memo } from 'react';
+import { Card, ListGroup } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { Star } from 'lucide-react';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+
+import { ContactDto } from '../types/dto/ContactDto';
+import { TOGGLE_FAVORITE_CONTACTS_ACTION } from '../redux/actions';
 
 interface ContactCardProps {
-  contact: ContactDto,
-  withLink?: boolean
+  contact: ContactDto;
+  withLink?: boolean;
 }
 
-export const ContactCard = memo<ContactCardProps>(({
-    contact: {
-      photo,
-      id,
-      name,
-      phone,
-      birthday,
-      address
-    }, withLink
-  }) => {
+export const ContactCard = memo<ContactCardProps>(
+  ({ contact: { photo, id, name, phone, birthday, address }, withLink }) => {
+    const dispatch = useAppDispatch();
+    const favoriteContacts = useAppSelector(state => state.favoriteContacts);
+    const isFav = favoriteContacts.includes(id);
+
+    const onToggleFav = () => {
+      dispatch({ type: TOGGLE_FAVORITE_CONTACTS_ACTION, payload: id });
+    };
+
     return (
       <Card key={id}>
         <Card.Img variant="top" src={photo} />
         <Card.Body>
-          <Card.Title>
+          <Card.Title className="d-flex justify-content-between">
             {withLink ? <Link to={`/contact/${id}`}>{name}</Link> : name}
+            <Star
+              size={24}
+              {...(isFav ? { fill: 'orange' } : null)}
+              onClick={onToggleFav}
+              cursor="pointer"
+            />
           </Card.Title>
           <Card.Body>
             <ListGroup>
-              <ListGroup.Item><Link to={`tel:${phone}`} target="_blank">{phone}</Link></ListGroup.Item>
+              <ListGroup.Item>
+                <Link to={`tel:${phone}`} target="_blank">
+                  {phone}
+                </Link>
+              </ListGroup.Item>
               <ListGroup.Item>{birthday}</ListGroup.Item>
               <ListGroup.Item>{address}</ListGroup.Item>
             </ListGroup>
@@ -36,4 +50,4 @@ export const ContactCard = memo<ContactCardProps>(({
       </Card>
     );
   }
-)
+);
