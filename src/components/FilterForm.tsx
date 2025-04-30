@@ -1,18 +1,18 @@
+import { observer } from 'mobx-react-lite';
 import { Formik } from 'formik';
 import { Button, Col, Form, InputGroup, Row } from 'react-bootstrap';
-import { memo } from 'react';
 import { FormikConfig } from 'formik/dist/types';
 
-import { useGetGroupsQuery } from '../ducks/groups';
+import { store } from '../store/store';
 
 export interface FilterFormValues {
   name: string;
   groupId: string;
 }
 
-export const FilterForm = memo<FormikConfig<Partial<FilterFormValues>>>(
+export const FilterForm = observer<FormikConfig<Partial<FilterFormValues>>>(
   ({ onSubmit, initialValues = {} }) => {
-    const { data: groups } = useGetGroupsQuery();
+    const groups = store.groups;
 
     return (
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
@@ -37,13 +37,11 @@ export const FilterForm = memo<FormikConfig<Partial<FilterFormValues>>>(
                   aria-label="Поиск по группе"
                   onChange={handleChange}
                 >
-                  <option>Open this select menu</option>
-                  {groups &&
-                    groups.map(groupContacts => (
-                      <option value={groupContacts.id} key={groupContacts.id}>
-                        {groupContacts.name}
-                      </option>
-                    ))}
+                  {groups.map(groupContacts => (
+                    <option value={groupContacts.id} key={groupContacts.id}>
+                      {groupContacts.name}
+                    </option>
+                  ))}
                 </Form.Select>
               </Col>
               <Col>
