@@ -4,14 +4,13 @@ import { useParams } from 'react-router-dom';
 
 import { ContactCard } from '../components/ContactCard';
 import { Empty } from '../components/Empty';
-import { useGetContactsQuery } from '../ducks/contacts';
+import { store } from '../store/store';
 
 export const ContactPage = () => {
   const { contactId } = useParams<{ contactId: string }>();
-  const { data: contacts } = useGetContactsQuery();
+  const contacts = store.contacts;
 
   const contact = useMemo(() => {
-    if (!contacts) return;
     return contacts.find(({ id }) => id === contactId);
   }, [contactId]);
 

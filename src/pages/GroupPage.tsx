@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { observer } from 'mobx-react-lite';
 import { Col, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
@@ -7,13 +7,12 @@ import { Empty } from '../components/Empty';
 import { ContactCard } from '../components/ContactCard';
 
 import { GroupContactsDto } from '../types/dto/GroupContactsDto';
-import { useGetGroupsQuery } from '../ducks/groups';
-import { useGetContactsQuery } from '../ducks/contacts';
+import { store } from '../store/store';
 
-export const GroupPage = memo(() => {
+export const GroupPage = observer(() => {
   const { groupId } = useParams<{ groupId: string }>();
-  const { data: contacts } = useGetContactsQuery();
-  const { data: groups } = useGetGroupsQuery();
+  const contacts = store.contacts;
+  const groups = store.groups;
 
   const currGroup = groups?.find(({ id }) => id === groupId);
   const filteredContacts = contacts?.filter(({ id }) => currGroup?.contactIds.includes(id));

@@ -1,25 +1,22 @@
-import { memo } from 'react';
+import { observer } from 'mobx-react-lite';
 import { Card, ListGroup } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Star } from 'lucide-react';
-import { useAppDispatch, useAppSelector } from '../ducks/hooks';
 
 import { ContactDto } from '../types/dto/ContactDto';
-import { toggleFavoriteContacts } from '../ducks/favorites';
+import { store } from '../store/store';
 
 interface ContactCardProps {
   contact: ContactDto;
   withLink?: boolean;
 }
 
-export const ContactCard = memo<ContactCardProps>(
+export const ContactCard = observer<ContactCardProps>(
   ({ contact: { photo, id, name, phone, birthday, address }, withLink }) => {
-    const dispatch = useAppDispatch();
-    const favoriteContacts = useAppSelector(state => state.favoriteContacts);
-    const isFav = favoriteContacts.includes(id);
+    const isFav = store.isFavorite(id);
 
     const onToggleFav = () => {
-      dispatch(toggleFavoriteContacts(id));
+      store.toggleFavorite(id);
     };
 
     return (
