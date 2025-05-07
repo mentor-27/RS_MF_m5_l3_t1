@@ -2,10 +2,10 @@ import { memo } from 'react';
 import { Card, ListGroup } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Star } from 'lucide-react';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../ducks/hooks';
 
 import { ContactDto } from '../types/dto/ContactDto';
-import { TOGGLE_FAVORITE_CONTACTS_ACTION } from '../redux/actions';
+import { toggleFavoriteContacts } from '../ducks/favorites';
 
 interface ContactCardProps {
   contact: ContactDto;
@@ -19,7 +19,7 @@ export const ContactCard = memo<ContactCardProps>(
     const isFav = favoriteContacts.includes(id);
 
     const onToggleFav = () => {
-      dispatch({ type: TOGGLE_FAVORITE_CONTACTS_ACTION, payload: id });
+      dispatch(toggleFavoriteContacts(id));
     };
 
     return (

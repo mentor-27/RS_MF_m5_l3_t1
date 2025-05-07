@@ -26,6 +26,8 @@
     "vite": "^6.2.0"
   },
   "dependencies": {
+    "@redux-devtools/extension": "^3.3.0",
+    "@reduxjs/toolkit": "^2.7.0",
     "lucide-react": "^0.488.0",
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",

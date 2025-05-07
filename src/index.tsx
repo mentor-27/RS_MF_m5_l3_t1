@@ -4,7 +4,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import './index.scss';
 
 import { MainApp } from './apps/MainApp';
-import { persistor, store } from './redux/store';
+import { persistor, store } from './ducks/store';
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
